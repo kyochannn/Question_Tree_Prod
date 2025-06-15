@@ -23,7 +23,7 @@
               <strong>자신감 있고 주체적인 성격</strong>으로, <strong>원하는 것을 똑 부러지게 표현하는 타입</strong>이에요.</p>
           </div>
         </div>
-      </div>
+      </div> 
       <!-- End Service Item -->
       <div class="col-xl-6 col-lg-6" data-aos="fade-up" data-aos-delay="300">
         <div class="service-item d-flex">
