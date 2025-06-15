@@ -1,0 +1,40 @@
+@charset "UTF-8";
+
+.testResultType {
+  background-color: black; 
+  color: white; 
+  font-weight: 800;
+  padding: 3px 7px; 
+  border-radius: 5px;
+}
+
+.highcharts-credits {
+  fill: white !important;
+}
+
+.for-ad {
+  z-index: 9999;              /* 위로 띄우기 */
+  pointer-events: none;       /* 클릭 막기 */
+  background-size: 20px;
+  image-rendering: pixelated;
+  filter: blur(10px);
+}
+
+.for-ad.clear {
+  background-size: cover;
+  image-rendering: auto;
+  filter: none;
+  pointer-events: auto;
+}
+
+.height-limit {
+	height: 350px;
+}
+
+.height-limit-170 {
+	height: 170px;
+}
+
+.kakao-popup-img {
+	width: 70%;
+}
