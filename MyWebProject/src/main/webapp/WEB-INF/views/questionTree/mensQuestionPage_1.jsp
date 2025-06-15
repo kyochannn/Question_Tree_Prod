@@ -107,7 +107,7 @@
           </div>
         </div>
       </div>
-    </section><!-- /Service Details Section -->
+    </section> <!-- /Service Details Section -->
 
 	<% } else { %>
 
