@@ -23,27 +23,33 @@
   <main class="main">
     <!-- Start QuestionTree Section -->
     <section id="hero" class="hero section">
-      <div class="hero-bg">
-        <img src="img/hero-bg-light.webp" alt="">
-      </div>
-      <div class="container text-center">
-      	<div class="d-flex flex-column justify-content-center align-items-center">
-          	<h1 data-aos="fade-up"><span> 에겐 VS 테토</span> 테스트</h1>
-          	<p data-aos="fade-up" data-aos-delay="100">넌 에겐이야? 테토야? - 현대남녀 구분법!<br></p>
-			<div class="d-flex mt-1" data-aos="fade-up" data-aos-delay="100">
-			  <a href="/selectGenderPage" class="btn-get-started"><span>테스트 시작</span><i class="bi bi-arrow-right"></i></a>
-			  <a href="/viewEgenTetoSummaryPage" class="btn-watch-video d-flex align-items-center"><i class="bi bi-vignette"></i><span>에겐/테토 통계</span></a>
-			</div>
-			<div class="d-flex mt-4" data-aos="fade-up" data-aos-delay="200">
-				<div class="pricing">
-				  	<h4><span>현재까지 </span><div class="participant-count"><%= participant %></div><span> 명이 참여했어요!</span></h4>
+	    <div class="hero-bg">
+	      	<img src="img/hero-bg-light.webp" alt="">
+	    </div>
+	    <div class="container text-center">
+	    	<div class="d-flex flex-column justify-content-center align-items-center">
+	        	<h1 data-aos="fade-up"><span> 에겐 VS 테토</span> 테스트</h1>
+	        	<p data-aos="fade-up" data-aos-delay="100">넌 에겐이야? 테토야? - 현대남녀 구분법!<br></p>
+				<div class="d-flex mt-1" data-aos="fade-up" data-aos-delay="100">
+				  	<a href="/selectGenderPage" class="btn-get-started"><span>테스트 시작</span><i class="bi bi-arrow-right"></i></a>
+				  	<a href="/viewEgenTetoSummaryPage" class="btn-watch-video d-flex align-items-center"><i class="bi bi-vignette"></i><span>에겐/테토 통계</span></a>
+				</div>
+				<div class="d-flex mt-4" data-aos="fade-up" data-aos-delay="200">
+					<div class="pricing">
+					  	<h4>
+					  		<span>현재까지 </span>
+					  		<div class="participant-count" style="font-size: clamp(1.5rem, 5vw, 3rem);">
+					  			<%= participant %>
+					  		</div>
+					  		<span>명이 참여했어요!</span>
+				  		</h4>
+					</div>          
 				</div>          
-			</div>          
-			<div class="">
-			  <img src="img/indexPageImg.webp" class="img-fluid hero-img" alt="" data-aos="zoom-out" data-aos-delay="300">
-			</div>
-      	</div>
-      </div>
+				<div>
+				  	<img src="img/indexPageImg.webp" class="img-fluid hero-img" alt="" data-aos="zoom-out" data-aos-delay="300">
+				</div>
+	    	</div>
+	    </div>
     </section>
     <!-- End QuestionTree Section -->
     

@@ -266,91 +266,91 @@
 							    <h3>시간별 테스트 진행자 수</h3>
 							</div>
 
-							
 							<figure class="highcharts-figure" style="width: 100%;">
 							    <div id="HourlyUsage"></div>
 							</figure>
+							
 							<script type="text/javascript">
-							Highcharts.chart('HourlyUsage', {
-							    chart: {
-							        zooming: {
-							            type: 'xy'
-							        }
-							    },
-							    title: {
-							        text: null,
-							        align: null
-							    },
-							    credits: {
-							        text: null
-							    },
-							    exporting: {
-							        enabled: false // 햄버거 아이콘 제거
-							    },
-							    xAxis: [{
-							        categories: [
-							            '0시', '1시', '2시', '3시', '4시', '5시', '6시', '7시', '8시', '9시', '10시', '11시',
-							            '12시', '13시', '14시', '15시', '16시', '17시', '18시', '19시', '20시', '21시', '22시', '23시'
-							            ],
-							            crosshair: true
-							        }],
-							        yAxis: [{ // Primary yAxis only
-							            labels: {
-							                format: '{value}',
-							                style: {
-							                    color: Highcharts.getOptions().colors[1]
-							                }
-							            },
-							            title: {
-							                text: null,
-							                style: {
-							                    color: Highcharts.getOptions().colors[1]
-							                }
-							            }
-							        }],
-							        tooltip: {
-							            shared: true
-							        },
-							        legend: {
-							            align: 'center',
-							            verticalAlign: 'bottom',
-							            backgroundColor:
-							                Highcharts.defaultOptions.legend.backgroundColor || // theme
-							                'rgba(255,255,255,0.25)'
-							        },
-							        series: [{
-							            name: '금일 시간별 테스트 사용자',
-							            type: 'column',
-							            data: [
-							        	<% 
-							        	for (Integer i : todayHourlyUsageList) {
-							        	%>
-							        		<%= i %>,
-							        	<% 
-							        	}
-							        	%>
-							        	],
-							            tooltip: {
-							                valueSuffix: '명'
-							            }
-
-							        }, {
-							            name: '작일 시간별 테스트 사용자',
-							            type: 'spline',
-							            data: [
-							        	<% 
-							        	for (Integer i : yesterdayHourlyUsageList) {
-							        	%>
-							        		<%= i %>,
-							        	<% 
-							        	}
-							        	%>
-							        	],
-							            tooltip: {
-							                valueSuffix: '명'
-							            }
-							        }]
-							    });
+								Highcharts.chart('HourlyUsage', {
+								    chart: {
+								        zooming: {
+								            type: 'xy'
+								        }
+								    },
+								    title: {
+								        text: null,
+								        align: null
+								    },
+								    credits: {
+								        text: null
+								    },
+								    exporting: {
+								        enabled: false // 햄버거 아이콘 제거
+								    },
+								    xAxis: [{
+								        categories: [
+								            '0시', '1시', '2시', '3시', '4시', '5시', '6시', '7시', '8시', '9시', '10시', '11시',
+								            '12시', '13시', '14시', '15시', '16시', '17시', '18시', '19시', '20시', '21시', '22시', '23시'
+								            ],
+								            crosshair: true
+								        }],
+								        yAxis: [{ // Primary yAxis only
+								            labels: {
+								                format: '{value}',
+								                style: {
+								                    color: Highcharts.getOptions().colors[1]
+								                }
+								            },
+								            title: {
+								                text: null,
+								                style: {
+								                    color: Highcharts.getOptions().colors[1]
+								                }
+								            }
+								        }],
+								        tooltip: {
+								            shared: true
+								        },
+								        legend: {
+								            align: 'center',
+								            verticalAlign: 'bottom',
+								            backgroundColor:
+								                Highcharts.defaultOptions.legend.backgroundColor || // theme
+								                'rgba(255,255,255,0.25)'
+								        },
+								        series: [{
+								            name: '금일 시간별 테스트 사용자',
+								            type: 'column',
+								            data: [
+								        	<% 
+								        	for (Integer i : todayHourlyUsageList) {
+								        	%>
+								        		<%= i %>,
+								        	<% 
+								        	}
+								        	%>
+								        	],
+								            tooltip: {
+								                valueSuffix: '명'
+								            }
+	
+								        	}, {
+								            name: '작일 시간별 테스트 사용자',
+								            type: 'spline',
+								            data: [
+								        	<% 
+								        	for (Integer i : yesterdayHourlyUsageList) {
+								        	%>
+								        		<%= i %>,
+								        	<% 
+								        	}
+								        	%>
+								        	],
+								            tooltip: {
+								                valueSuffix: '명'
+								            }
+								        }]
+								    });
 							</script>
 						</div>
 					</div>
@@ -377,7 +377,7 @@
 									<%
 									List<TestUserBroker> userList = (List<TestUserBroker>) request.getAttribute("userList");
 									if (userList != null) {
-										//					    for (int i = 0; i < userList.size(); i++) {
+										// [25.06.24] 해당 반복문 userList가 100보다 작을 때 오류 발생함. 해결 필요
 										for (int i = 0; i < 100; i++) {
 											TestUserBroker user = userList.get(i);
 									%>
@@ -404,7 +404,7 @@
 							class="info-item d-flex flex-column justify-content-center align-items-center"
 							data-aos="fade-up" data-aos-delay="100">
 							<i class="bi bi-1-circle"></i>
-							<h3>1차 목표[⭕]: 이용자 1만명</h3>
+							<h3>1차 목표[⭕]: 이용자 1만 명</h3>
 							<div style="width: 90%; height: 25px;" class="progress mt-2"
 								role="progressbar" aria-label="Example with label"
 								aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
@@ -420,7 +420,7 @@
 							class="info-item d-flex flex-column justify-content-center align-items-center"
 							data-aos="fade-up" data-aos-delay="100">
 							<i class="bi bi-2-circle"></i>
-							<h3>2차 목표[⭕]: 이용자 3만명</h3>
+							<h3>2차 목표[⭕]: 이용자 3만 명</h3>
 							<div style="width: 90%; height: 25px;" class="progress mt-2"
 								role="progressbar" aria-label="Example with label"
 								aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
@@ -438,7 +438,7 @@
 							class="info-item d-flex flex-column justify-content-center align-items-center"
 							data-aos="fade-up" data-aos-delay="100">
 							<i class="bi bi-star-fill"></i>
-							<h3>최종 목표[🔺]: 이용자 10만명</h3>
+							<h3>최종 목표[⭕]: 이용자 10만 명</h3>
 							<div style="width: 90%; height: 25px;" class="progress mt-2"
 								role="progressbar" aria-label="Example with label"
 								aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">

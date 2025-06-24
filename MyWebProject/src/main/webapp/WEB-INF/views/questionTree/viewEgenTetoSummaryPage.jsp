@@ -291,7 +291,6 @@
 
 	<main class="main">
 
-
 		<!-- Contact Section -->
 		<section id="contact" class="contact section">
 
@@ -306,278 +305,261 @@
 				
 			</div>
 			<!-- End Section Title -->
-
+			
 			<div class="container" data-aos="fade-up" data-aos-delay="100">
-			
-			<div class="row gy-4 mt-1">
-				<div class="col-lg-12">
-					<div class="info-item d-flex flex-column justify-content-center align-items-center"
-						data-aos="fade-up" data-aos-delay="100">
-						<i class="bi bi-record-circle-fill"></i>
-						<h3>에겐/테토 테스트 전체 비율</h3>
-						
-							<figure class="highcharts-figure" style="width: 100%;">
-						    <div id="tetoEgenTotalRatio"></div>
-						    <!-- 
-						    <p class="highcharts-description">
-						        설명 글 
-						    </p>
-						     -->
-						</figure>
-						
-						<script type="text/javascript">
-						Highcharts.chart('tetoEgenTotalRatio', {
-						    chart: {
-						        type: 'pie',
-						        custom: {},
-						        events: {
-						            render() {
-						                const chart = this,
-						                    series = chart.series[0];
-
-						                let customLabel = chart.options.chart.custom.label;
-
-						                if (!customLabel) {
-						                    customLabel = chart.options.chart.custom.label =
-						                        chart.renderer.label(
-						                            '<strong><%= formattedParticipant %></strong>'
-						                        )
-						                            .css({
-						                                color: '#000',
-						                                textAnchor: 'middle'
-						                            })
-						                            .add();
-						                }
-						                
-						                const x = series.center[0] + chart.plotLeft,
-						                    y = series.center[1] + chart.plotTop -
-						                    (customLabel.attr('height') / 2);
-
-						                customLabel.attr({
-						                    x,
-						                    y
-						                });
-						                // Set font size based on chart diameter
-						                customLabel.css({
-						                    fontSize: `20px`,
-						                    color: `#b3b3b3`
-						                });
-						            }
-						        }
-						    },
-						    accessibility: {
-						        point: {
-						            valueSuffix: '%'
-						        }
-						    },
-						    title: {
-						        text: null
-						    },
-						    subtitle: {
-						        text: '에겐 테토 비율을 한눈에 보여드릴게요.'
-						    },
-						    tooltip: {
-						        pointFormat: '{series.name}: <b>{point.percentage:.0f}%</b> '
-						        + '<br> 명수: <b>{point.cnt}명</b>'
-						    },
-						    legend: {
-						        enabled: false
-						    },
-						    plotOptions: {
-						        series: {
-						            allowPointSelect: true,
-						            cursor: 'pointer',
-						            borderRadius: 8,
-						            dataLabels: [{
-						                enabled: true,
-						                distance: 20,
-						                format: '{point.name}'
-						            }, {
-						                enabled: true,
-						                distance: -15,
-						                format: '{point.percentage:.0f}%',
-						                style: {
-						                    fontSize: '0.9em'
-						                }
-						            }],
-						            showInLegend: true
-						        }
-						    },
-						    series: [{
-						        name: '비율',
-						        colorByPoint: true,
-						        innerSize: '75%',
-						        data: [{
-						            name: '테토남',
-						            y: <%= tetoMCntPercent %>,
-						            cnt: <%= tetoMCnt %>,
-						            color: '#3876f2'
-						        }, {
-						            name: '에겐남',
-						            y: <%= egenMCntPercent %>,
-						            cnt: <%= egenMCnt %>,
-						            color: '#95b9ff'
-						        }, {
-						            name: '테토녀',
-						            y: <%= tetoWCntPercent %>,
-						            cnt: <%= tetoWCnt %>,
-						            color: '#de66e9'
-						        }, {
-						            name: '에겐녀',
-						            y: <%= egenWCntPercent %>,
-						            cnt: <%= egenWCnt %>,
-						            color: '#f79bff'
-						        }]
-						    }]
-						});
-
-						</script>
-						
-						
-					</div>
-				</div>
-				<!-- End Info Item -->
-			</div>
-			
-			<div class="row gy-4 mt-1">
-				<div class="col-lg-12">
-					<div
-						class="info-item d-flex flex-column justify-content-center align-items-center"
-						data-aos="fade-up" data-aos-delay="200">
-						<i class="bi bi-gender-ambiguous"></i>
-						<h3>에겐/테토 테스트 남녀 비율</h3>
-
-						<div class="mt-2 progress" style="width: 90%; height: 25px;">
-							<div class="progress-bar bg-teto" role="progressbar"
-								style="width: <%=mCntPercent%>%"
-								aria-valuenow="<%=mCntPercent%>" aria-valuemin="0"
-								aria-valuemax="200">
-								남자(<%= mCnt %>명) <%=String.format("%.1f", mCntPercent)%>%
-							</div>
-							<div class="progress-bar bg-egen" role="progressbar"
-								style="width: <%=wCntPercent%>%"
-								aria-valuenow="<%=wCntPercent%>" aria-valuemin="0"
-								aria-valuemax="100">
-								여자(<%= wCnt %>명) <%=String.format("%.1f", wCntPercent)%>%
+				<div class="row gy-4 mt-1">
+					<div class="col-lg-12">
+						<div class="info-item d-flex flex-column justify-content-center align-items-center"
+							data-aos="fade-up" data-aos-delay="200">
+							<i class="bi bi-gender-ambiguous"></i>
+							<h3>에겐/테토 테스트 남녀 비율</h3>
+	
+							<div class="mt-2 progress" style="width: 90%; height: 25px;">
+								<div class="progress-bar bg-teto" role="progressbar"
+									style="width: <%=mCntPercent%>%"
+									aria-valuenow="<%=mCntPercent%>" aria-valuemin="0"
+									aria-valuemax="200">
+									남자(<%= mCnt %>명) <%=String.format("%.1f", mCntPercent)%>%
+								</div>
+								<div class="progress-bar bg-egen" role="progressbar"
+									style="width: <%=wCntPercent%>%"
+									aria-valuenow="<%=wCntPercent%>" aria-valuemin="0"
+									aria-valuemax="100">
+									여자(<%= wCnt %>명) <%=String.format("%.1f", wCntPercent)%>%
+								</div>
 							</div>
 						</div>
-
 					</div>
 				</div>
-			</div>
-				
-				
-			
-				
+					
 				<div class="row gy-4 mt-1">
-					<div class="col-lg-12 col-md-12">
+					<div class="col-lg-6 col-md-12">
 						<div class="info-item d-flex flex-column justify-content-center align-items-center"
-								data-aos="fade-up" data-aos-delay="100">
+							data-aos="fade-up" data-aos-delay="100">
+							<i class="bi bi-record-circle-fill"></i>
+							<h3>에겐/테토 테스트 전체 비율</h3>
+							
+							<figure class="highcharts-figure" style="width: 100%;">
+							    <div id="tetoEgenTotalRatio"></div>
+							    <!-- 
+							    <p class="highcharts-description">
+							        설명 글 
+							    </p>
+							     -->
+							</figure>
+							<script type="text/javascript">
+								Highcharts.chart('tetoEgenTotalRatio', {
+								    chart: {
+								        type: 'pie',
+								        custom: {},
+								        events: {
+								            render() {
+								                const chart = this,
+								                    series = chart.series[0];
+		
+								                let customLabel = chart.options.chart.custom.label;
+		
+								                if (!customLabel) {
+								                    customLabel = chart.options.chart.custom.label =
+								                        chart.renderer.label(
+								                            '<strong><%= formattedParticipant %></strong>'
+								                        )
+								                            .css({
+								                                color: '#000',
+								                                textAnchor: 'middle'
+								                            })
+								                            .add();
+								                }
+								                
+								                const x = series.center[0] + chart.plotLeft,
+								                    y = series.center[1] + chart.plotTop -
+								                    (customLabel.attr('height') / 2);
+		
+								                customLabel.attr({
+								                    x,
+								                    y
+								                });
+								                // Set font size based on chart diameter
+								                customLabel.css({
+								                    fontSize: `20px`,
+								                    color: `#b3b3b3`
+								                });
+								            }
+								        }
+								    },
+								    accessibility: {
+								        point: {
+								            valueSuffix: '%'
+								        }
+								    },
+								    title: {
+								        text: null
+								    },
+								    subtitle: {
+								        text: '에겐 테토 비율을 한눈에 보여드릴게요.'
+								    },
+								    tooltip: {
+								        pointFormat: '{series.name}: <b>{point.percentage:.0f}%</b> '
+								        + '<br> 명수: <b>{point.cnt}명</b>'
+								    },
+								    legend: {
+								        enabled: false
+								    },
+								    plotOptions: {
+								        series: {
+								            allowPointSelect: true,
+								            cursor: 'pointer',
+								            borderRadius: 8,
+								            dataLabels: [{
+								                enabled: true,
+								                distance: 20,
+								                format: '{point.name}'
+								            }, {
+								                enabled: true,
+								                distance: -15,
+								                format: '{point.percentage:.0f}%',
+								                style: {
+								                    fontSize: '0.9em'
+								                }
+								            }],
+								            showInLegend: true
+								        }
+								    },
+								    series: [{
+								        name: '비율',
+								        colorByPoint: true,
+								        innerSize: '75%',
+								        data: [{
+								            name: '테토남',
+								            y: <%= tetoMCntPercent %>,
+								            cnt: <%= tetoMCnt %>,
+								            color: '#3876f2'
+								        }, {
+								            name: '에겐남',
+								            y: <%= egenMCntPercent %>,
+								            cnt: <%= egenMCnt %>,
+								            color: '#95b9ff'
+								        }, {
+								            name: '테토녀',
+								            y: <%= tetoWCntPercent %>,
+								            cnt: <%= tetoWCnt %>,
+								            color: '#de66e9'
+								        }, {
+								            name: '에겐녀',
+								            y: <%= egenWCntPercent %>,
+								            cnt: <%= egenWCnt %>,
+								            color: '#f79bff'
+								        }]
+								    }]
+								});
+							</script>
+						</div>
+					</div>
+					
+					<!-- End Info Item -->	
+					<div class="col-lg-6 col-md-12">
+						<div class="info-item d-flex flex-column justify-content-center align-items-center"
+							data-aos="fade-up" data-aos-delay="100">
 							<i class="bi bi-bar-chart-line"></i>
 							<h3>에겐/테토 세부 영역 비율</h3>
-	
 							<figure class="highcharts-figure" style="width: 100%;">
 							    <div id="container"></div>
 							</figure>
+							<script type="text/javascript">
+								Highcharts.chart('container', {
+			
+							    chart: {
+							        type: 'column'
+							    },
+			
+							    title: {
+							        text: null
+							    },
+			
+							    xAxis: [{
+							        categories: ['외적 스타일 및 자기관리', '사회성 및 인간관계', '내면 성향 및 감정 처리 방식', '야망 및 인생 태도'],
+							        labels: {
+							            rotation: 0
+							        }
+							    }, {
+							        linkedTo: 0,
+							        opposite: true, // 윗쪽으로 붙임
+							        categories: ['남　여', '남　여', '남　여', '남　여'],
+							        labels: {
+							            style: {
+							                color: 'gray',
+							                fontSize: '10px'
+							            }
+							        },
+							        tickLength: 0,
+							        lineWidth: 0
+							    }],
+			
+			
+							    yAxis: {
+							        allowDecimals: false,
+							        min: 0,
+							        title: {
+							            text: null
+							        }
+							    },
+			
+							    tooltip: {
+							        format: '<b>{key}</b><br/>{series.name}<br/>{y}명 / {point.stackTotal}명'
+							    },
+			
+							    plotOptions: {
+							        column: {
+							            stacking: 'normal'
+							        }
+							    },
+			
+							    series: [{
+							        name: '테토형(남)',
+							        gender: '남성',
+							        data: [<%= styleTetoMCnt %>, <%= socialTetoMCnt %>, <%= innerTetoMCnt %>, <%= ambitionTetoMCnt %>],
+							        stack: 'tetoSection',
+							        color: '#3876f2'
+							    }, {
+							        name: '믹스형(남)',
+							        gender: '남성',
+							        data: [<%= styleMixMCnt %>, <%= socialMixMCnt %>, <%= innerMixMCnt %>, <%= ambitionMixMCnt %>],
+							        stack: 'tetoSection',
+							        color: 'rgb(20 185 109)'
+							    }, {
+							        name: '에겐형(남)',
+							        gender: '남성',
+							        data: [<%= styleEgenMCnt %>, <%= socialEgenMCnt %>, <%= innerEgenMCnt %>, <%= ambitionEgenMCnt %>],
+							        stack: 'tetoSection',
+							        color: '#de66e9'
+							    }, {
+							        name: '테토형(여)',
+							        gender: '여성',
+							        data: [<%= styleTetoWCnt %>, <%= socialTetoWCnt %>, <%= innerTetoWCnt %>, <%= ambitionTetoWCnt %>],
+							        stack: 'egenSection',
+							        color: '#3876f2'
+							    }, {
+							        name: '믹스형(여)',
+							        gender: '여성',
+							        data: [<%= styleMixWCnt %>, <%= socialMixWCnt %>, <%= innerMixWCnt %>, <%= ambitionMixWCnt %>],
+							        stack: 'egenSection',
+							        color: 'rgb(20 185 109)'
+							    }, {
+							        name: '에겐형(여)',
+							        gender: '여성',
+							        data: [<%= styleEgenWCnt %>, <%= socialEgenWCnt %>, <%= innerEgenWCnt %>, <%= ambitionEgenWCnt %>],
+							        stack: 'egenSection',
+							        color: '#de66e9'
+							    }]
+							});
+						</script>
 						</div>
-					</div>
-	
-					
+					</div>	
 				</div>
-				
-				<script type="text/javascript">
-				Highcharts.chart('container', {
-
-				    chart: {
-				        type: 'column'
-				    },
-
-				    title: {
-				        text: null
-				    },
-
-				    xAxis: [{
-				        categories: ['외적 스타일 및 자기관리', '사회성 및 인간관계', '내면 성향 및 감정 처리 방식', '야망 및 인생 태도'],
-				        labels: {
-				            rotation: 0
-				        }
-				    }, {
-				        linkedTo: 0,
-				        opposite: true, // 윗쪽으로 붙임
-				        categories: ['남　여', '남　여', '남　여', '남　여'],
-				        labels: {
-				            style: {
-				                color: 'gray',
-				                fontSize: '10px'
-				            }
-				        },
-				        tickLength: 0,
-				        lineWidth: 0
-				    }],
-
-
-				    yAxis: {
-				        allowDecimals: false,
-				        min: 0,
-				        title: {
-				            text: null
-				        }
-				    },
-
-				    tooltip: {
-				        format: '<b>{key}</b><br/>{series.name}<br/>{y}명 / {point.stackTotal}명'
-				    },
-
-				    plotOptions: {
-				        column: {
-				            stacking: 'normal'
-				        }
-				    },
-
-				    series: [{
-				        name: '테토형(남)',
-				        gender: '남성',
-				        data: [<%= styleTetoMCnt %>, <%= socialTetoMCnt %>, <%= innerTetoMCnt %>, <%= ambitionTetoMCnt %>],
-				        stack: 'tetoSection',
-				        color: '#3876f2'
-				    }, {
-				        name: '믹스형(남)',
-				        gender: '남성',
-				        data: [<%= styleMixMCnt %>, <%= socialMixMCnt %>, <%= innerMixMCnt %>, <%= ambitionMixMCnt %>],
-				        stack: 'tetoSection',
-				        color: 'rgb(20 185 109)'
-				    }, {
-				        name: '에겐형(남)',
-				        gender: '남성',
-				        data: [<%= styleEgenMCnt %>, <%= socialEgenMCnt %>, <%= innerEgenMCnt %>, <%= ambitionEgenMCnt %>],
-				        stack: 'tetoSection',
-				        color: '#de66e9'
-				    }, {
-				        name: '테토형(여)',
-				        gender: '여성',
-				        data: [<%= styleTetoWCnt %>, <%= socialTetoWCnt %>, <%= innerTetoWCnt %>, <%= ambitionTetoWCnt %>],
-				        stack: 'egenSection',
-				        color: '#3876f2'
-				    }, {
-				        name: '믹스형(여)',
-				        gender: '여성',
-				        data: [<%= styleMixWCnt %>, <%= socialMixWCnt %>, <%= innerMixWCnt %>, <%= ambitionMixWCnt %>],
-				        stack: 'egenSection',
-				        color: 'rgb(20 185 109)'
-				    }, {
-				        name: '에겐형(여)',
-				        gender: '여성',
-				        data: [<%= styleEgenWCnt %>, <%= socialEgenWCnt %>, <%= innerEgenWCnt %>, <%= ambitionEgenWCnt %>],
-				        stack: 'egenSection',
-				        color: '#de66e9'
-				    }]
-				});
-				</script>
 				
 				<div class="row gy-4 mt-1">
 					<div class="col-lg-4 col-md-6">
-						<div
-							class="info-item d-flex flex-column justify-content-center align-items-center"
+						<div class="info-item d-flex flex-column justify-content-center align-items-center"
 							data-aos="fade-up" data-aos-delay="100">
 							<i class="bi bi-people"></i>
 							<h3>총 테스트 진행자 수</h3>
@@ -591,8 +573,7 @@
 					<!-- End Info Item -->
 	
 					<div class="col-lg-4 col-md-6">
-						<div
-							class="info-item d-flex flex-column justify-content-center align-items-center"
+						<div class="info-item d-flex flex-column justify-content-center align-items-center"
 							data-aos="fade-up" data-aos-delay="200">
 							<i class="bi bi-graph-up-arrow"></i>
 							<h3>금일 테스트 진행자 수</h3>
@@ -606,18 +587,17 @@
 					<!-- End Info Item -->
 					
 					<div class="col-lg-4 col-md-6">
-					  <a href="/selectGenderPage" style="text-decoration: none; color: inherit;">
-					    <div class="info-item d-flex flex-column justify-content-center align-items-center"
-					      data-aos="fade-up" data-aos-delay="300">
-					      <i class="bi bi-ui-checks"></i>
-					      <h3>에겐/테토 테스트 시작!</h3>
-					      <span>여기를 눌러 테스트를 해보세요!</span>
-					    </div>
-					  </a>
+					  	<a href="/selectGenderPage" style="text-decoration: none; color: inherit;">
+						    <div class="info-item d-flex flex-column justify-content-center align-items-center"
+						      	data-aos="fade-up" data-aos-delay="300">
+						      	<i class="bi bi-ui-checks"></i>
+						      	<h3>에겐/테토 테스트 시작!</h3>
+						      	<span>여기를 눌러 테스트를 해보세요!</span>
+						    </div>
+					  	</a>
 					</div>
 					<!-- End Info Item -->
 				</div>
-
 			</div>
 		</section>
 		<!-- /Contact Section -->
@@ -633,7 +613,7 @@
 			data-ad-height = "250"></ins>
 			<script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
 		</div>
-		
+
 	</main>
 
 	<!-- layout: 헤더 영역 -->
