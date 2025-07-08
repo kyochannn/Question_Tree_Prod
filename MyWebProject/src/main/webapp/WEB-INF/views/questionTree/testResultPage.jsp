@@ -88,10 +88,10 @@
 						int innerTendencyPoint = userBroker.getInnerTendencyPoint();
 						int ambitionPoint = userBroker.getAmbitionPoint();
 						
-						String styleSelfcarePointStr = ( 0 == styleSelfcarePoint ) ? "에겐 반 테토 반" : "총 " + styleSelfcarePoint + "점";
-						String socialSkillPointStr = ( 0 == socialSkillPoint ) ? "에겐 반 테토 반" : "총 " + socialSkillPoint + "점";
-						String innerTendencyPointStr = ( 0 == innerTendencyPoint ) ? "에겐 반 테토 반" : "총 " + innerTendencyPoint + "점";
-						String ambitionPointStr = ( 0 == ambitionPoint ) ? "에겐 반 테토 반" : "총 " + ambitionPoint + "점";
+						String styleSelfcarePointStr = ( 0 == styleSelfcarePoint ) ? "스타일 믹스형" : "총 " + styleSelfcarePoint + "점";
+						String socialSkillPointStr = ( 0 == socialSkillPoint ) ? "사회적 믹스형" : "총 " + socialSkillPoint + "점";
+						String innerTendencyPointStr = ( 0 == innerTendencyPoint ) ? "내면 믹스형" : "총 " + innerTendencyPoint + "점";
+						String ambitionPointStr = ( 0 == ambitionPoint ) ? "야망 믹스형" : "총 " + ambitionPoint + "점";
 						
 						System.out.println("styleSelfcarePointStr: " + styleSelfcarePointStr);
 						System.out.println("socialSkillPointStr: " + socialSkillPointStr);

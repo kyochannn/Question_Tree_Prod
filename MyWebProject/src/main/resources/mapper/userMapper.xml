@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.MyWebProject.mapper.QTUserMapper">
+
+	<!-- 로그인을 위한 조회 -->
+	<select id="getQTUser" resultType="com.example.MyWebProject.broker.QTUserBroker">
+		SELECT * FROM questiontree.QTUser
+		WHERE userId = #{userId}
+		AND password = #{password};
+	</select>
+	
+	<!-- 질문지 마스터 조회 쿼리 -->
+	<select id="getQTUserAll" resultType="com.example.MyWebProject.broker.QTUserBroker">
+		SELECT * FROM questiontree.QTUser;
+	</select>
+
+</mapper>
