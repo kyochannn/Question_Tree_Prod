@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.MyWebProject.mapper.TestUserMapper">
+
+	<!-- 사용자 전체 조회 -->
+	<select id="getAllTestUsers" resultType="com.example.MyWebProject.broker.TestUserBroker">
+		SELECT * FROM questiontree.UserTestResult
+		order by testDate desc;
+	</select>
+	
+	<!-- userNo로 사용자 조회 -->
+	<select id="getTestUser" resultType="com.example.MyWebProject.broker.TestUserBroker">
+		SELECT * FROM questiontree.UserTestResult
+		WHERE userNo = #{userNo};
+	</select>
+	
+	<!-- userName로 사용자 업데이트 -->
+	<update id="updateUserName">
+	    UPDATE questiontree.UserTestResult
+	    SET userName = #{userName}
+	    WHERE userNo = #{userNo}
+	</update>
+
+	<!-- 사용자 로그 쌓기 -->
+    <insert id="userLogToDatabase" parameterType="com.example.MyWebProject.broker.TestUserBroker">
+	    INSERT INTO questiontree.UserTestResult (
+		    userNo,
+		    userName,
+		    gender,
+		    testResultType,
+		    styleSelfcareResultType,
+		    socialSkillResultType,
+		    innerTendencyResultType,
+		    ambitionResultType,
+		    zScore,
+		    topPercent,
+		    tetoScore,
+		    egenScore,
+		    styleSelfcarePoint,
+		    socialSkillPoint,
+		    innerTendencyPoint,
+		    ambitionPoint,
+		    isTesterMyself
+		)
+		VALUES (
+		    #{userNo},
+		    #{userName},           -- 사용자 이름
+		    #{gender},             -- 성별
+		    #{testResultType},     -- 테스트 결과
+		    #{styleSelfcareResultType},
+		    #{socialSkillResultType},
+		    #{innerTendencyResultType},
+		    #{ambitionResultType},
+		    #{zScore},             -- zScore
+		    #{topPercent},         -- topPercent
+		    #{tetoScore},          -- tetoScore
+		    #{egenScore},          -- egenScore
+		    #{styleSelfcarePoint}, -- styleSelfcarePoint
+		    #{socialSkillPoint},   -- socialSkillPoint
+		    #{innerTendencyPoint}, -- innerTendencyPoint
+		    #{ambitionPoint},      -- ambitionPoint
+		    #{isTesterMyself}      -- 테스트 진행자 (나: T, 다른 사람: F)
+		);
+    </insert>
+
+</mapper>

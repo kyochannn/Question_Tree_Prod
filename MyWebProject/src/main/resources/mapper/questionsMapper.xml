@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.MyWebProject.mapper.QuestionsMapper">
+
+	<!-- 질문지 마스터 조회 쿼리 -->
+	<select id="getQuestionsMasterAll" resultType="com.example.MyWebProject.broker.QuestionsMasterBroker">
+		SELECT * FROM questiontree.QTQuestionsMaster;
+	</select>
+	
+	<select id="getQuestionsMaster" resultType="com.example.MyWebProject.broker.QuestionsMasterBroker">
+		SELECT * FROM questiontree.QTQuestionsMaster
+		WHERE questionNo = #{questionNo};
+	</select>
+	
+	<!-- 질문지 마스터 테이블 수정 쿼리 -->
+	<update id="updateQuestionsMaster">
+	    
+	</update>
+	
+	<!-- 질문지 전체 조회 쿼리 -->
+	<select id="getQuestions" resultType="com.example.MyWebProject.broker.QuestionsBroker">
+		SELECT * FROM questiontree.QTQuestions
+		WHERE questionNo = #{questionNo};
+	</select>
+	
+	<!-- 질문지 테이블 수정 쿼리 -->
+	<update id="updateQuestions">
+	    UPDATE questiontree.QTQuestions
+		SET
+		  questionPageImgUrl = #{questionPageImgUrl},
+		  
+		  question1 = #{question1}, question2 = #{question2}, question3 = #{question3},
+		  question4 = #{question4}, question5 = #{question5}, question6 = #{question6},
+		  question7 = #{question7}, question8 = #{question8}, question9 = #{question9},
+		  question10 = #{question10}, question11 = #{question11}, question12 = #{question12},
+		  question13 = #{question13}, question14 = #{question14}, question15 = #{question15},
+		  question16 = #{question16}, question17 = #{question17}, question18 = #{question18},
+		  question19 = #{question19}, question20 = #{question20}, question21 = #{question21},
+		  question22 = #{question22}, question23 = #{question23}, question24 = #{question24},
+		
+		  question1Type = #{question1Type}, question2Type = #{question2Type}, question3Type = #{question3Type},
+		  question4Type = #{question4Type}, question5Type = #{question5Type}, question6Type = #{question6Type},
+		  question7Type = #{question7Type}, question8Type = #{question8Type}, question9Type = #{question9Type},
+		  question10Type = #{question10Type}, question11Type = #{question11Type}, question12Type = #{question12Type},
+		  question13Type = #{question13Type}, question14Type = #{question14Type}, question15Type = #{question15Type},
+		  question16Type = #{question16Type}, question17Type = #{question17Type}, question18Type = #{question18Type},
+		  question19Type = #{question19Type}, question20Type = #{question20Type}, question21Type = #{question21Type},
+		  question22Type = #{question22Type}, question23Type = #{question23Type}, question24Type = #{question24Type},
+		
+		  updatedDate = NOW()
+		WHERE questionNo = #{questionNo};
+	</update>
+
+	<!-- 질문지 생성 쿼리 -->
+    <insert id="insertQuestions" parameterType="com.example.MyWebProject.broker.QuestionsBroker">
+		INSERT INTO questiontree.QTQuestions (
+			questionNo,
+			userId,
+			questionPageImgUrl,
+			question1, question2, question3, question4, question5, question6,
+			question7, question8, question9, question10, question11, question12,
+			question13, question14, question15, question16, question17, question18,
+			question19, question20, question21, question22, question23, question24,
+			question1Type, question2Type, question3Type, question4Type, question5Type, question6Type,
+			question7Type, question8Type, question9Type, question10Type, question11Type, question12Type,
+			question13Type, question14Type, question15Type, question16Type, question17Type, question18Type,
+			question19Type, question20Type, question21Type, question22Type, question23Type, question24Type,
+			createdDate,
+			updatedDate
+		)
+		VALUES (
+			#{questionNo},
+			#{userId},
+			#{questionPageImgUrl},
+			#{question1}, #{question2}, #{question3}, #{question4}, #{question5}, #{question6},
+			#{question7}, #{question8}, #{question9}, #{question10}, #{question11}, #{question12},
+			#{question13}, #{question14}, #{question15}, #{question16}, #{question17}, #{question18},
+			#{question19}, #{question20}, #{question21}, #{question22}, #{question23}, #{question24},
+			#{question1Type}, #{question2Type}, #{question3Type}, #{question4Type}, #{question5Type}, #{question6Type},
+			#{question7Type}, #{question8Type}, #{question9Type}, #{question10Type}, #{question11Type}, #{question12Type},
+			#{question13Type}, #{question14Type}, #{question15Type}, #{question16Type}, #{question17Type}, #{question18Type},
+			#{question19Type}, #{question20Type}, #{question21Type}, #{question22Type}, #{question23Type}, #{question24Type},
+			NOW(), NOW()
+		);
+    </insert>
+
+</mapper>
