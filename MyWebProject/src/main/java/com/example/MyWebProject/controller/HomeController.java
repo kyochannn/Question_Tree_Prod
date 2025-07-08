@@ -10,11 +10,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.example.MyWebProject.broker.QuestionsBroker;
+import com.example.MyWebProject.broker.QuestionsMasterBroker;
 import com.example.MyWebProject.broker.TestUserBroker;
 import com.example.MyWebProject.serviceImpl.QuestionResultServiceImpl;
+import com.example.MyWebProject.serviceImpl.QuestionsServiceImpl;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -23,8 +28,17 @@ public class HomeController {
 
 	@Autowired
 	QuestionResultServiceImpl userService;
+	
+	@Autowired
+	QuestionsServiceImpl questionService;
 
-	// 페이지 이동 method
+	// ==================== [이하 페이지 이동 method] ====================
+	
+	/**
+	 * index 페이지 이동
+	 * 
+	 * @return
+	 */
 	@GetMapping(value = "/")
 	public ModelAndView home() {
 		// /WEB-INF/views/index.jsp
@@ -37,7 +51,13 @@ public class HomeController {
 		return mv;
 	}
 	
-	// 관리자 페이지
+	/**
+	 * 관리자 페이지 이동
+	 * 관리자 페이지는 로그인을 진행한 관리자 권한의 사용자만 이용 가능함.
+	 * 
+	 * @param session
+	 * @return
+	 */
 	@GetMapping(value = "/viewAdminPage")
 	public ModelAndView viewAdminPage(HttpSession session) {
 		List<TestUserBroker> userList = userService.getAllTestUsers();
@@ -75,6 +95,11 @@ public class HomeController {
 		return mv;
 	}
 
+	/**
+	 * 성별 선택 페이지 이동
+	 * 
+	 * @return
+	 */
 	@GetMapping(value = "/selectGenderPage")
 	public ModelAndView selectGenderPage() {
 		List<TestUserBroker> userList = userService.getAllTestUsers();
@@ -97,6 +122,12 @@ public class HomeController {
 		return mv;
 	}
 
+	/**
+	 * 질문지 1페이지 이동
+	 * 
+	 * @param session
+	 * @return
+	 */
 	@GetMapping(value = "/mensQuestionPage_1")
 	public String mensQuestionPage_1(HttpSession session) {
 		String gender = (String)session.getAttribute("gender");
@@ -109,6 +140,12 @@ public class HomeController {
 		return "questionTree/mensQuestionPage_1";
 	}
 
+	/**
+	 * 질문지 2페이지 이동
+	 * 
+	 * @param session
+	 * @return
+	 */
 	@GetMapping(value = "/mensQuestionPage_2")
 	public String mensQuestionPage_2(HttpSession session) {
 		String gender = (String)session.getAttribute("gender");
@@ -122,6 +159,11 @@ public class HomeController {
 		return "questionTree/mensQuestionPage_2";
 	}
 
+	/**
+	 * 질문지 3페이지 이동
+	 * @param session
+	 * @return
+	 */
 	@GetMapping(value = "/mensQuestionPage_3")
 	public String mensQuestionPage_3(HttpSession session) {
 		String gender = (String)session.getAttribute("gender");
@@ -135,6 +177,12 @@ public class HomeController {
 		return "questionTree/mensQuestionPage_3";
 	}
 
+	/**
+	 * 테스트 결과 페이지 이동
+	 * 
+	 * @param session
+	 * @return
+	 */
 	@GetMapping("/testResultPage")
 	public String testResultPage(HttpSession session) {
 	    String gender = (String) session.getAttribute("gender");
@@ -157,6 +205,12 @@ public class HomeController {
 	    return "redirect:/testSharePage?userNo=" + userBroker.getUserNo();
 	}
 
+	/**
+	 * 테스트 공유 페이지 이동
+	 * 
+	 * @param userNo
+	 * @return
+	 */
 	@GetMapping("/testSharePage")
 	public ModelAndView resultPage(@RequestParam String userNo) {
 	    TestUserBroker userBroker = userService.getTestUser(userNo);
@@ -170,7 +224,43 @@ public class HomeController {
 	    return mv;
 	}
 
-	// 처리 method
+	/**
+	 * 릴리즈 노트 페이지 이동
+	 * 
+	 * @return
+	 */
+	@GetMapping("/releaseNotesPage")
+	public ModelAndView releaseNotesPage() {
+		ModelAndView mv = new ModelAndView("questionTree/releaseNotes");
+		
+		return mv;
+	}
+	
+	/**
+	 * 질문 리스트 조회 및 수정
+	 * 관리자 권한 사용자만 접근 가능함.
+	 * 
+	 * @return
+	 */
+	@GetMapping("/selectQuestionListPage")
+	public ModelAndView selectQuestionListPage(HttpSession session) {
+		List<QuestionsMasterBroker> questionsMasterList = questionService.getQuestionsMasterAll();
+		
+		// 로그인한 사용자 정보 가져오기
+		String userName = (String) session.getAttribute("userName");
+		
+		ModelAndView mv = new ModelAndView();
+		if (userName == null) {
+			mv.setViewName("redirect:/loginPage");
+		} else {
+			mv.setViewName("questionTree/questionManagement/selectQuestionListPage");
+			mv.addObject("questionsMasterList", questionsMasterList);
+		}
+		
+		return mv;
+	}
+	
+	// ==================== [이하 처리 method] ====================
 	@PostMapping("/selectGenderPage")
 	public String selectMens(@RequestParam String gender, HttpSession session) {
 		session.setAttribute("gender", gender);
@@ -214,13 +304,62 @@ public class HomeController {
 	    return result;
 	}
 	
-	@GetMapping("/releaseNotesPage")
-	public ModelAndView releaseNotesPage() {
-		ModelAndView mv = new ModelAndView("questionTree/releaseNotes");
-		
-		return mv;
-	}
+	@PostMapping("/getQuestionsMasterAll")
+	@ResponseBody
+	public List<QuestionsMasterBroker> getQuestionsMasterAll() {
+	    List<QuestionsMasterBroker> questionsMasterList = questionService.getQuestionsMasterAll();
+	    System.out.println("questionsMasterList 크기 :::::: " + questionsMasterList.size());
 
+	    // JSON 배열로 반환됨
+	    return questionsMasterList; 
+	}
+	
+	@PostMapping("/getQuestionsMaster")
+	@ResponseBody
+	public QuestionsMasterBroker getQuestionsMasterAll(@RequestBody Map<String, String> param) {
+		String questionNo = param.get("questionNo");
+	    QuestionsMasterBroker questionsMaster = questionService.getQuestionsMaster(questionNo);
+
+	    // JSON 배열로 반환됨
+	    return questionsMaster;
+	}
+	
+	@PostMapping("/getQuestions")
+	@ResponseBody
+	public QuestionsBroker getQuestions(@RequestBody Map<String, String> param) {
+	    String questionNo = param.get("questionNo");
+	    QuestionsBroker questions = questionService.getQuestions(questionNo);
+
+	    // JSON 배열로 반환됨
+	    return questions; 
+	}
+	
+	@PostMapping("/updateQuestionsMaster")
+	@ResponseBody
+	public void updateQuestionsMaster(@RequestBody QuestionsMasterBroker broker) {
+		String str = broker.toString();
+		System.out.println("1:" + str);
+	}
+	
+	@PostMapping("/updateQuestions")
+	@ResponseBody
+	public void updateQuestions(@RequestBody QuestionsBroker broker) {
+		String str = broker.toString();
+		System.out.println("2:" + str);
+		questionService.updateQuestions(broker);
+	}
+	
+	// ==================== [이하 정보 처리 method] ====================
+	
+	/**
+	 * 
+	 * 
+	 * @param page1
+	 * @param page2
+	 * @param page3
+	 * @param userBroker
+	 * @return
+	 */
 	private TestUserBroker calculateResult(Map<String, String> page1, Map<String, String> page2,
 			Map<String, String> page3, TestUserBroker userBroker) {
 		

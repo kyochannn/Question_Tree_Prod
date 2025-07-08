@@ -29,7 +29,7 @@
 
 			<form action="/processLogin" method="POST">
 			  <div class="user-box mt-4">
-			    <input type="text" name="userName" autofocus required>
+			    <input type="text" name="userId" autofocus required>
 			    <label>ID</label>
 			  </div>
 			  <div class="user-box">
@@ -47,7 +47,7 @@
 			  </div>
 		     -->
 			  <input class="login-btn" type="submit" value="관리자 로그인" >
-			  <input class="dist" type="hidden" value="${userName}" >
+			  <input class="dist" type="hidden" value="${userId}" >
 			  
 			</form>
 			<div class="container copyright text-center mt-4 mb-0" style="font-size: 12px;">

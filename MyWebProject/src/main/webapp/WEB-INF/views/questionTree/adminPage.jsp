@@ -1,3 +1,6 @@
+<%@page import="java.util.Iterator"%>
+<%@page import="java.util.TreeMap"%>
+<%@page import="java.util.Map"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.example.MyWebProject.broker.TestUserBroker"%>
 <%@page import="java.time.LocalDateTime"%>
@@ -13,7 +16,6 @@
 <head>
 <jsp:include page="../layout/meta.jsp" />
 <link href="css/testResult-page.css" rel="stylesheet">
-<link href="css/highcharts.css" rel="stylesheet">
 
 <!-- highcharts --> 
 <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -39,6 +41,7 @@
 	double primaryGoal = participant * 100.0 / 10000.0;
 	double secondGoal = participant * 100.0 / 30000.0;
 	double finalGoal = participant * 100.0 / 100000.0;
+	double extendedGoal = participant * 100.0 / 1000000.0;
 
 	int mCnt = 0;
 	int wCnt = 0;
@@ -61,6 +64,8 @@
 	
 	List<Integer> todayHourlyUsageList = new ArrayList<>(24);
 	List<Integer> yesterdayHourlyUsageList = new ArrayList<>();	
+	
+	Map<String, Integer> dailyUsageMap = new TreeMap<>(); // 날짜 오름차순 정렬용
 
 	Object userListObj = request.getAttribute("userList");
 	if (userListObj instanceof List<?>) {
@@ -123,19 +128,32 @@
 				}
 			}
 		}
+		
+		// 일별 계산
+		for (Object obj : rawList) {
+			if (obj instanceof TestUserBroker) {
+				TestUserBroker user = (TestUserBroker) obj;
+				String testDateStr = user.getTestDate();
+
+				if (testDateStr != null && !testDateStr.isEmpty()) {
+					try {
+						testDateStr = testDateStr.split("\\.")[0];
+						LocalDateTime dateTime = LocalDateTime.parse(testDateStr, formatter);
+						String dayKey = dateTime.toLocalDate().toString(); // yyyy-MM-dd 형태
+
+						dailyUsageMap.put(dayKey, dailyUsageMap.getOrDefault(dayKey, 0) + 1);
+					} catch (Exception e) {
+						System.err.println("일자 파싱 오류: " + testDateStr);
+					}
+				}
+			}
+		}
 	}
 
 	if (participant > 0) {
 		mCntPercent = (double) mCnt * 100 / participant;
 		wCntPercent = (double) wCnt * 100 / participant;
 	}
-	
-	/*
-	tetoMCntPercent = (double) tetoMCnt * 100 / mCnt;
-	egenMCntPercent = (double) egenMCnt * 100 / mCnt;
-	tetoWCntPercent = (double) tetoWCnt * 100 / wCnt;
-	egenWCntPercent = (double) egenWCnt * 100 / wCnt;
-	*/
 	
 	tetoMCntPercent = (double) tetoMCnt * 100 / participant;
 	egenMCntPercent = (double) egenMCnt * 100 / participant;
@@ -145,7 +163,7 @@
 	%>
 
 	<%!
-	// 금일 시간별 사용률
+	// 시간별 사용량
 	public List<Integer> getTodayHourlyUsage(List<Integer> list, TestUserBroker user) {
 	    String testDateStr = user.getTestDate();
 	
@@ -174,7 +192,8 @@
 	    return list;
 	}
 	
-	// 전일 시간별 사용률
+	// 일별 사용량
+	
 	
 	%>
 
@@ -192,7 +211,7 @@
 					<strong>시스템 전체 상태를 실시간으로 모니터링</strong>하며, <strong>주요 기능 및 정책을 제어 및 제공</strong>합니다. <br><br>
 					권한 없는 접근은 <span style="text-decoration: underline;">엄중히 금지</span>됩니다. <br>
 					<strong>모든 접속 기록은 철저히 로그</strong>로 남으며, <strong>무단 접근 시 로그 분석을 통해 즉각 식별 및 조치</strong>됩니다.  <br><br>
-					<strong>권한이 없는 사용자는 <span style="text-decoration: underline;"><a style="color: red;" href="https://ecrm.police.go.kr/minwon/crs/quick/cyber1">즉시 페이지를 벗어나십시오.</a></span></strong>
+					<strong>권한이 없는 사용자는 <span><a style="color: red;" href="https://ecrm.police.go.kr/minwon/crs/quick/cyber1">즉시 페이지를 벗어나십시오.</a></span></strong>
 				</p>
 			</div>
 			<!-- End Section Title -->
@@ -249,8 +268,6 @@
 									<div class="participant-count"><%= todayCnt %></div>명이 더 참여했어요!
 								</p>
 							</div>
-							<p>
-							</p>
 						</div>
 					</div>
 					<!-- End Info Item -->
@@ -355,6 +372,74 @@
 						</div>
 					</div>
 					<div class="col-lg-6 col-md-12">
+						<div style="height: 580px;"
+							class="info-item d-flex flex-column justify-content-center align-items-center"
+							data-aos="fade-up" data-aos-delay="400">
+							<div style="height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+							    <i class="bi bi-bar-chart"></i>
+							    <h3>일별 테스트 진행자 수</h3>
+							</div>
+							<figure class="highcharts-figure" style="width: 100%;">
+							    <div id="DailyUsage"></div>
+							</figure>
+							
+							<script type="text/javascript">
+							Highcharts.chart('DailyUsage', {
+							    chart: {
+							    	type: 'area',
+							        zooming: {
+							            type: 'xy'
+							        }
+							    },
+						        title: {
+							        text: null,
+							        align: null
+						        },
+							    credits: {
+							        text: null
+							    },
+							    exporting: {
+							        enabled: false // 햄버거 아이콘 제거
+							    },
+							    xAxis: {
+							        categories: [
+							        	<%
+							        	for (Iterator<String> it = dailyUsageMap.keySet().iterator(); it.hasNext();) {
+							        		String dateKey = it.next();
+							        	%>
+							        		'<%= dateKey %>'<%= it.hasNext() ? "," : "" %>
+							        	<% } %>
+							        ],
+							        title: {
+							            text: '날짜'
+							        }
+							    },
+							    yAxis: {
+							        title: {
+							        	text: null,
+								        align: null
+							        }
+							    },
+							    tooltip: {
+							        valueSuffix: '명'
+							    },
+							    series: [{
+							        name: '일별 사용자',
+							        data: [
+							        	<%
+							        	for (Iterator<Integer> it = dailyUsageMap.values().iterator(); it.hasNext();) {
+							        		Integer count = it.next();
+							        	%>
+							        		<%= count %><%= it.hasNext() ? "," : "" %>
+							        	<% } %>
+							        ]
+							    }]
+							});
+							</script>
+
+						</div>
+					</div>
+					<div class="col-lg-12 col-md-12">
 						<div style="height: 580px; overflow-y: auto;"
 							class="info-item d-flex flex-column align-items-center"
 							data-aos="fade-up" data-aos-delay="500">
@@ -364,13 +449,21 @@
 								<h3 class="mt-2">실시간 테스트 현황 (100건)</h3>
 							</div>
 							
-							<table class="table table-hover" id="goList100"
-								style="width: 95%;">
+							<table class="table table-hover" id="goList100" style="width: 95%;">
+							  	<colgroup>
+							    	<col style="width: 10%;">
+							   		<col style="width: 20%;">
+							    	<col style="width: 20%;">
+							    	<col style="width: 20%;">
+							    	<col style="width: 30%;">
+							  	</colgroup>
 								<thead class="table-light">
 									<tr>
-										<th></th>
-										<th>링크</th>
-										<th>생성일</th>
+										<th class="text-center"></th>
+										<th class="text-center">링크</th>
+										<th class="text-center">공유 이름</th>
+										<th class="text-center">백분율</th>
+										<th class="text-center">생성일</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -380,11 +473,17 @@
 										// [25.06.24] 해당 반복문 userList가 100보다 작을 때 오류 발생함. 해결 필요
 										for (int i = 0; i < 100; i++) {
 											TestUserBroker user = userList.get(i);
+											String shareUserName = user.getUserName();
+											if ("".equals(shareUserName) || shareUserName == null) {
+												shareUserName = "-";
+											}
 									%>
 									<tr>
-										<td><%=i + 1%></td>
-										<td><a href="https://kckoo.co.kr/testSharePage?userNo=<%=user.getUserNo()%>" target="_blank"><%=user.getTestResultType()%></a></td>
-										<td><%=user.getTestDate()%></td>
+										<td class="text-center"><%=i + 1%></td>
+										<td class="text-center"><a href="https://kckoo.co.kr/testSharePage?userNo=<%=user.getUserNo()%>" target="_blank"><%=user.getTestResultType()%></a></td>
+										<td class="text-center"><%= shareUserName %></td>
+										<td class="text-center">상위 <%= user.getTopPercent() %>%</td>
+										<td class="text-center"><%=user.getTestDate()%></td>
 									</tr>
 									<%
 										}
@@ -400,8 +499,7 @@
 
 				<div class="row gy-4 mt-1">
 					<div class="col-lg-6 col-md-12">
-						<div
-							class="info-item d-flex flex-column justify-content-center align-items-center"
+						<div class="info-item d-flex flex-column justify-content-center align-items-center"
 							data-aos="fade-up" data-aos-delay="100">
 							<i class="bi bi-1-circle"></i>
 							<h3>1차 목표[⭕]: 이용자 1만 명</h3>
@@ -416,15 +514,14 @@
 					<!-- End Info Item -->
 
 					<div class="col-lg-6 col-md-12">
-						<div
-							class="info-item d-flex flex-column justify-content-center align-items-center"
+						<div class="info-item d-flex flex-column justify-content-center align-items-center"
 							data-aos="fade-up" data-aos-delay="100">
 							<i class="bi bi-2-circle"></i>
 							<h3>2차 목표[⭕]: 이용자 3만 명</h3>
 							<div style="width: 90%; height: 25px;" class="progress mt-2"
 								role="progressbar" aria-label="Example with label"
 								aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-								<div class="progress-bar progress-bar-striped bg-info progress-bar-animated" style="width: <%=String.format("%.2f", secondGoal)%>%"><%=String.format("%.2f", secondGoal)%>%
+								<div class="progress-bar progress-bar-striped bg-questiontree progress-bar-animated" style="width: <%=String.format("%.2f", secondGoal)%>%"><%=String.format("%.2f", secondGoal)%>%
 								</div>
 							</div>
 						</div>
@@ -433,7 +530,7 @@
 				</div>
 				
 				<div class="row gy-4 mt-1">
-					<div class="col-lg-12">
+					<div class="col-lg-6 col-md-12">
 						<div
 							class="info-item d-flex flex-column justify-content-center align-items-center"
 							data-aos="fade-up" data-aos-delay="100">
@@ -442,8 +539,69 @@
 							<div style="width: 90%; height: 25px;" class="progress mt-2"
 								role="progressbar" aria-label="Example with label"
 								aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-								<div class="progress-bar progress-bar-striped bg-danger progress-bar-animated" style="width: <%=String.format("%.2f", finalGoal)%>%"><%=String.format("%.2f", finalGoal)%>%
+								<div class="progress-bar progress-bar-striped bg-questiontree progress-bar-animated" style="width: <%=String.format("%.2f", finalGoal)%>%"><%=String.format("%.2f", finalGoal)%>%
 								</div>
+							</div>
+						</div>
+					</div>
+					<!-- End Info Item -->
+					<div class="col-lg-6 col-md-12">
+						<div
+							class="info-item d-flex flex-column justify-content-center align-items-center"
+							data-aos="fade-up" data-aos-delay="100">
+							<i class="bi bi-arrows-angle-expand"></i>
+							<h3>확장 목표[🔺]: 이용자 100만 명</h3>
+							<div style="width: 90%; height: 25px;" class="progress mt-2"
+								role="progressbar" aria-label="Example with label"
+								aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+								<div class="progress-bar progress-bar-striped bg-danger progress-bar-animated" style="width: <%=String.format("%.2f", extendedGoal)%>%"><%=String.format("%.2f", extendedGoal)%>%
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- End Info Item -->					
+				</div>
+
+				<div class="row gy-4 mt-1">
+					<div class="col-lg-3 col-md-6">
+						<div class="info-item d-flex flex-column justify-content-center align-items-center"
+							data-aos="fade-up" data-aos-delay="100">
+							<i class="bi bi-pencil-square"></i>
+							<h3>Questions Editor</h3>
+							<a href="/selectQuestionListPage" target="_blank">질문지 수정하기</a>
+						</div>
+					</div>
+					<!-- End Info Item -->
+
+					<div class="col-lg-3 col-md-6">
+						<div class="info-item d-flex flex-column justify-content-center align-items-center"
+							data-aos="fade-up" data-aos-delay="200">
+							<i class="bi bi-pencil-square"></i>
+							<h3>User Info Editor</h3>
+							<div style="display: inline-block;">
+								<a href="/userInfoUpdateForAdmin" target="_blank">사용자 정보 수정하기</a>
+							</div>
+						</div>
+					</div>
+					<!-- End Info Item -->
+
+					<div class="col-lg-3 col-md-6">
+						<div class="info-item d-flex flex-column justify-content-center align-items-center"
+							data-aos="fade-up" data-aos-delay="300">
+							<i class="bi bi-pencil-square"></i>
+							<h3>User Review Editor</h3>
+							<a href="#">사용자 리뷰 수정하기</a>
+						</div>
+					</div>
+					<!-- End Info Item -->
+
+					<div class="col-lg-3 col-md-6">
+						<div class="info-item d-flex flex-column justify-content-center align-items-center"
+							data-aos="fade-up" data-aos-delay="400">
+							<i class="bi bi-substack"></i>
+							<h3>Login User Log</h3>
+							<div style="display: inline-block;">
+								<a href="#" target="_blank">로그인 정보 로그 확인</a>
 							</div>
 						</div>
 					</div>
@@ -452,8 +610,7 @@
 
 				<div class="row gy-4 mt-1">
 					<div class="col-lg-3 col-md-6">
-						<div
-							class="info-item d-flex flex-column justify-content-center align-items-center"
+						<div class="info-item d-flex flex-column justify-content-center align-items-center"
 							data-aos="fade-up" data-aos-delay="500">
 							<i class="bi bi-stack"></i>
 							<h3>cafe24 접속</h3>
@@ -473,19 +630,18 @@
 					<!-- End Info Item -->
 
 					<div class="col-lg-3 col-md-6">
-						<div
-							class="info-item d-flex flex-column justify-content-center align-items-center"
-							data-aos="fade-up" data-aos-delay="800">
+						<div class="info-item d-flex flex-column justify-content-center align-items-center"
+							data-aos="fade-up" data-aos-delay="700">
 							<i class="bi bi-google"></i>
 							<h3>Google Adsense 접속</h3>
-							<a href="https://adsense.google.com/intl/ko_kr/start/">구글 애드센스 바로가기</a>
+							<a href="https://adsense.google.com/intl/ko_kr/start/" target="_blank">구글 애드센스 바로가기</a>
 						</div>
 					</div>
 					<!-- End Info Item -->
 					
 					<div class="col-lg-3 col-md-6">
 						<div class="info-item d-flex flex-column justify-content-center align-items-center"
-							data-aos="fade-up" data-aos-delay="700">
+							data-aos="fade-up" data-aos-delay="800">
 							<i class="bi bi-chat-fill"></i>
 							<h3>Kakao Adfit 접속</h3>
 							<div style="display: inline-block;">
@@ -510,7 +666,7 @@
 					<div class="col-lg-3 col-md-6">
 						<div class="info-item d-flex flex-column justify-content-center align-items-center"
 							data-aos="fade-up" data-aos-delay="1000">
-							<i class="bi bi-code-slash"></i>
+							<i class="bi bi-search"></i>
 							<h3>에겐 테토 검색</h3>
 							<div style="display: inline-block;">
 								<a href="https://www.google.co.kr/search?q=%EC%97%90%EA%B2%90+%ED%85%8C%ED%86%A0&sca_esv=768393473445289f&hl=ko&source=hp&ei=v9E1aNP_G8COvr0P4vSC6A4&iflsig=AOw8s4IAAAAAaDXfzw5SoObxNAr_6Gn-XHKsb6TvX37M&ved=0ahUKEwiT2_6988ONAxVAh68BHWK6AO0Q4dUDCBc&uact=5&oq=%EC%97%90%EA%B2%90+%ED%85%8C%ED%86%A0&gs_lp=Egdnd3Mtd2l6Ig3sl5DqspAg7YWM7YagMgUQABiABDIFEAAYgAQyBRAAGIAEMg0QABiABBixAxiDARgKMg0QABiABBixAxiDARgKMgUQABiABDIFEAAYgAQyBRAAGIAEMgUQABiABDIFEAAYgARIgxdQAFjzEHAGeACQAQGYAXagAf8LqgEEMC4xNLgBA8gBAPgBAZgCDaACnweoAgDCAgcQLhiABBgKwgILEAAYgAQYsQMYgwHCAg4QLhiABBixAxjRAxjHAcICBxAAGIAEGArCAhEQLhiABBixAxjRAxiDARjHAcICCRAAGIAEGAoYKsICCBAuGIAEGLEDwgILEC4YgAQYsQMYgwHCAg0QLhiABBjRAxjHARgKwgIIEAAYgAQYsQPCAgQQABgDmAMA8QWo8a0oH0_PB5IHAzUuOKAH3V6yBwMwLji4B48H&sclient=gws-wiz" target="_blank">Google</a>
@@ -521,8 +677,22 @@
 					<!-- End Info Item -->
 
 					<div class="col-lg-3 col-md-6">
-						<div class="info-item d-flex flex-column justify-content-center align-items-center"
+						<div
+							class="info-item d-flex flex-column justify-content-center align-items-center"
 							data-aos="fade-up" data-aos-delay="1100">
+							<i class="bi bi-search"></i>
+							<h3>kckoo.co.kr 검색</h3>
+							<div style="display: inline-block;">
+								<a href="https://www.google.com/search?q=kckoo.co.kr&sca_esv=75e0c975f2ff141b&ei=9cpcaNGFM4fd2roPopTPwQI&ved=0ahUKEwiR1La_no6OAxWHrlYBHSLKMygQ4dUDCBA&uact=5&oq=kckoo.co.kr&gs_lp=Egxnd3Mtd2l6LXNlcnAiC2tja29vLmNvLmtyMgkQABiABBgKGA0yCBAAGAgYDRgeMgoQABgFGAoYDRgeMggQABgFGA0YHjIKEAAYCBgKGA0YHjIIEAAYCBgNGB4yCBAAGAgYDRgeMggQABgIGA0YHjIKEAAYCBgKGA0YHjIIEAAYCBgNGB5IyS5QhAZYtS1wA3gAkAEAmAGZAqAB6geqAQUyLjQuMbgBA8gBAPgBAZgCBaAC4QLCAgwQABiABBiwAxgTGArCAggQABiwAxjvBcICCxAAGIAEGLADGKIEwgILEAAYsAMYogQYiQXCAgYQABgNGB7CAg0QLhiABBjHARgNGK8BwgIHEAAYgAQYDcICHBAuGIAEGMcBGA0YrwEYlwUY3AQY3gQY4ATYAQGYAwCIBgGQBga6BgYIARABGBSSBwM0LjGgB6UYsgcDMi4xuAfcAsIHBTEuMi4yyAcL&sclient=gws-wiz-serp" target="_blank">Google</a>
+								/ <a href="https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=0&ie=utf8&query=kckoo.co.kr&ackey=zcny22rv" target="_blank">Naver</a>
+							</div>
+						</div>
+					</div>
+					<!-- End Info Item -->
+					
+					<div class="col-lg-3 col-md-6">
+						<div class="info-item d-flex flex-column justify-content-center align-items-center"
+							data-aos="fade-up" data-aos-delay="1200">
 							<i class="bi bi-substack"></i>
 							<h3>감쟈의 꿀팁 전수 접속</h3>
 							<div style="display: inline-block;">
@@ -531,60 +701,6 @@
 						</div>
 					</div>
 					<!-- End Info Item -->
-
-					<div class="col-lg-3 col-md-6">
-						<div
-							class="info-item d-flex flex-column justify-content-center align-items-center"
-							data-aos="fade-up" data-aos-delay="1200">
-							<i class="bi bi-pencil-square"></i>
-							<h3>사용자 리뷰 수정</h3>
-							<a href="#">사용자 리뷰 수정 [개발 중]</a>
-						</div>
-					</div>
-					<!-- End Info Item -->
-				</div>
-				
-				<div class="row gy-4 mt-1">
-					<div class="col-lg-12">
-						<form action="#" method="post" class="php-email-form"
-							data-aos="fade-up" data-aos-delay="100">
-							
-							<div class="row gy-4">
-
-								<div class="col-md-6">
-									<input type="text" name="name" class="form-control"
-										placeholder="이름 입력" required="">
-								</div>
-
-								<div class="col-md-6 ">
-									<input type="email" class="form-control" name="email"
-										placeholder="이메일 입력" required="">
-								</div>
-
-								<div class="col-md-12">
-									<input type="text" class="form-control" name="subject"
-										placeholder="제목" required="">
-								</div>
-
-								<div class="col-md-12">
-									<textarea class="form-control" name="message" rows="6"
-										placeholder="상세 내용" required=""></textarea>
-								</div>
-
-								<div class="col-md-12 text-center">
-									<div class="loading">Loading</div>
-									<div class="error-message"></div>
-									<div class="sent-message">Your message has been sent.
-										Thank you!</div>
-
-									<button type="submit">아이디어 공유 [개발 중]</button>
-								</div>
-
-							</div>
-						</form>
-					</div>
-					<!-- End Contact Form -->
-
 				</div>
 
 			</div>
